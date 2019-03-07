@@ -1,4 +1,4 @@
-package io.ipfs.api;
+package io.udfs.api;
 
 import io.ipfs.cid.*;
 import io.ipfs.multiaddr.*;

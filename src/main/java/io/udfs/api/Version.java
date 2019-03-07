@@ -1,4 +1,4 @@
-package io.ipfs.api;
+package io.udfs.api;
 
 public class Version implements Comparable<Version> {
 

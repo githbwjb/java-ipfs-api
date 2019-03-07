@@ -1,4 +1,4 @@
-package io.ipfs.api.cbor;
+package io.udfs.api.cbor;
 
 /*
  * JACOB - CBOR implementation in Java.
@@ -8,8 +8,7 @@ package io.ipfs.api.cbor;
 
 import java.io.*;
 
-import static io.ipfs.api.cbor.CborConstants.*;
-import static io.ipfs.api.cbor.CborType.*;
+import static io.udfs.api.cbor.CborConstants.*;
 
 /**
  * Provides a decoder capable of handling CBOR encoded data from a {@link InputStream}.
@@ -51,7 +50,7 @@ public class CborDecoder {
             return null;
         }
         m_is.unread(p);
-        return valueOf(p);
+        return CborType.valueOf(p);
     }
 
     /**
@@ -348,8 +347,8 @@ public class CborDecoder {
     protected long expectIntegerType(int ib) throws IOException {
         int majorType = ((ib & 0xFF) >>> 5);
         if ((majorType != TYPE_UNSIGNED_INTEGER) && (majorType != TYPE_NEGATIVE_INTEGER)) {
-            fail("Unexpected type: %s, expected type %s or %s!", getName(majorType), getName(TYPE_UNSIGNED_INTEGER),
-                    getName(TYPE_NEGATIVE_INTEGER));
+            fail("Unexpected type: %s, expected type %s or %s!", CborType.getName(majorType), CborType.getName(TYPE_UNSIGNED_INTEGER),
+                    CborType.getName(TYPE_NEGATIVE_INTEGER));
         }
         return -majorType;
     }
@@ -364,7 +363,7 @@ public class CborDecoder {
     protected int readMajorType(int majorType) throws IOException {
         int ib = m_is.read();
         if (majorType != ((ib >>> 5) & 0x07)) {
-            fail("Unexpected type: %s, expected: %s!", getName(ib), getName(majorType));
+            fail("Unexpected type: %s, expected: %s!", CborType.getName(ib), CborType.getName(majorType));
         }
         return ib & 0x1F;
     }

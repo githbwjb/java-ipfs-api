@@ -1,4 +1,4 @@
-package io.ipfs.api.cbor;
+package io.udfs.api.cbor;
 
 /*
  * JACOB - CBOR implementation in Java.
@@ -8,7 +8,7 @@ package io.ipfs.api.cbor;
  * Licensed under Apache License v2.0.
  */
 
-import static io.ipfs.api.cbor.CborConstants.*;
+import static io.udfs.api.cbor.CborConstants.*;
 
 /**
  * Represents the various major types in CBOR, along with their .

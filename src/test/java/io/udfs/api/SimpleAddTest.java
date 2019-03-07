@@ -1,4 +1,4 @@
-package io.ipfs.api;
+package io.udfs.api;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -7,19 +7,17 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import io.ipfs.api.NamedStreamable.FileWrapper;
 import io.ipfs.multiaddr.MultiAddress;
 
 /**
  *
- * ipfs daemon --enable-pubsub-experiment &
+ * UDFS daemon --enable-pubsub-experiment &
  *
- * ipfs pin rm `ipfs pin ls -qt recursive`
+ * UDFS pin rm `UDFS pin ls -qt recursive`
  *
- * ipfs --api=/ip4/127.0.0.1/tcp/5001 add -r src/test/resources/html
+ * UDFS --api=/ip4/127.0.0.1/tcp/5001 add -r src/test/resources/html
  *
  */
 public class SimpleAddTest {
@@ -30,13 +28,13 @@ public class SimpleAddTest {
         cids.put("html", "QmUQvDumYa8najL94EnGhmGobyMyNzAmCSpfAxYnYcQHZD");
     }
 
-    IPFS ipfs = new IPFS(new MultiAddress("/ip4/127.0.0.1/tcp/5001"));
+    UDFS UDFS = new UDFS(new MultiAddress("/ip4/127.0.0.1/tcp/5001"));
 
     @Test
     public void testSingle() throws Exception {
         Path path = Paths.get("src/test/resources/html/index.html");
-        NamedStreamable file = new FileWrapper(path.toFile());
-        List<MerkleNode> tree = ipfs.add(file);
+        NamedStreamable file = new NamedStreamable.FileWrapper(path.toFile());
+        List<MerkleNode> tree = UDFS.add(file);
 
         Assert.assertEquals(1, tree.size());
         Assert.assertEquals("index.html", tree.get(0).name.get());
@@ -47,8 +45,8 @@ public class SimpleAddTest {
     public void testSingleWrapped() throws Exception {
 
         Path path = Paths.get("src/test/resources/html/index.html");
-        NamedStreamable file = new FileWrapper(path.toFile());
-        List<MerkleNode> tree = ipfs.add(file, true);
+        NamedStreamable file = new NamedStreamable.FileWrapper(path.toFile());
+        List<MerkleNode> tree = UDFS.add(file, true);
 
         Assert.assertEquals(2, tree.size());
         Assert.assertEquals("index.html", tree.get(0).name.get());
@@ -59,8 +57,8 @@ public class SimpleAddTest {
     public void testSingleOnlyHash() throws Exception {
 
         Path path = Paths.get("src/test/resources/html/index.html");
-        NamedStreamable file = new FileWrapper(path.toFile());
-        List<MerkleNode> tree = ipfs.add(file, false, true);
+        NamedStreamable file = new NamedStreamable.FileWrapper(path.toFile());
+        List<MerkleNode> tree = UDFS.add(file, false, true);
 
         Assert.assertEquals(1, tree.size());
         Assert.assertEquals("index.html", tree.get(0).name.get());
@@ -71,8 +69,8 @@ public class SimpleAddTest {
     public void testRecursive() throws Exception {
 
         Path path = Paths.get("src/test/resources/html");
-        NamedStreamable file = new FileWrapper(path.toFile());
-        List<MerkleNode> tree = ipfs.add(file);
+        NamedStreamable file = new NamedStreamable.FileWrapper(path.toFile());
+        List<MerkleNode> tree = UDFS.add(file);
 
         Assert.assertEquals(8, tree.size());
         Assert.assertEquals("html", tree.get(7).name.get());
@@ -83,8 +81,8 @@ public class SimpleAddTest {
     public void testRecursiveOnlyHash() throws Exception {
 
         Path path = Paths.get("src/test/resources/html");
-        NamedStreamable file = new FileWrapper(path.toFile());
-        List<MerkleNode> tree = ipfs.add(file, false, true);
+        NamedStreamable file = new NamedStreamable.FileWrapper(path.toFile());
+        List<MerkleNode> tree = UDFS.add(file, false, true);
 
         Assert.assertEquals(8, tree.size());
         Assert.assertEquals("html", tree.get(7).name.get());

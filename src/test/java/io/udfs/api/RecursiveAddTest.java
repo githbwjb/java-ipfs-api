@@ -1,6 +1,5 @@
-package io.ipfs.api;
+package io.udfs.api;
 
-import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 
@@ -11,13 +10,13 @@ import io.ipfs.multiaddr.MultiAddress;
 
 public class RecursiveAddTest {
 
-    private final IPFS ipfs = new IPFS(new MultiAddress("/ip4/127.0.0.1/tcp/5001"));
+    private final UDFS UDFS = new UDFS(new MultiAddress("/ip4/127.0.0.1/tcp/5001"));
     
     static Path TMPDATA = Paths.get("target/tmpdata");
     
     @Test
     public void testAdd() throws Exception {
-        System.out.println("ipfs version: " + ipfs.version());
+        System.out.println("UDFS version: " + UDFS.version());
 
         String EXPECTED = "QmX5fZ6aUxNTAS7ZfYc8f4wPoMx6LctuNbMjuJZ9EmUSr6";
 
@@ -28,7 +27,7 @@ public class RecursiveAddTest {
         js.toFile().mkdirs();
         Files.write(js.resolve("func.js"), "function() {console.log('Hey');}".getBytes());
 
-        List<MerkleNode> add = ipfs.add(new NamedStreamable.FileWrapper(base.toFile()));
+        List<MerkleNode> add = UDFS.add(new NamedStreamable.FileWrapper(base.toFile()));
         MerkleNode node = add.get(add.size() - 1);
         Assert.assertEquals(EXPECTED, node.hash.toBase58());
     }
@@ -46,7 +45,7 @@ public class RecursiveAddTest {
         js.toFile().mkdirs();
         Files.write(js.resolve("func.js"), "function() {console.log('Hey');}".getBytes());
 
-        List<MerkleNode> add = ipfs.add(new NamedStreamable.FileWrapper(base.toFile()));
+        List<MerkleNode> add = UDFS.add(new NamedStreamable.FileWrapper(base.toFile()));
         MerkleNode node = add.get(add.size() - 1);
         Assert.assertEquals(EXPECTED, node.hash.toBase58());
     }
@@ -66,7 +65,7 @@ public class RecursiveAddTest {
         js.toFile().mkdirs();
         Files.write(js.resolve("func.js"), "function() {console.log('Hey');}".getBytes());
 
-        List<MerkleNode> add = ipfs.add(new NamedStreamable.FileWrapper(base.toFile()));
+        List<MerkleNode> add = UDFS.add(new NamedStreamable.FileWrapper(base.toFile()));
         MerkleNode node = add.get(add.size() - 1);
         Assert.assertEquals(EXPECTED, node.hash.toBase58());
     }
@@ -89,7 +88,7 @@ public class RecursiveAddTest {
         js.toFile().mkdirs();
         Files.write(js.resolve("func.js"), "function() {console.log('Hey');}".getBytes());
 
-        List<MerkleNode> add = ipfs.add(new NamedStreamable.FileWrapper(base.toFile()));
+        List<MerkleNode> add = UDFS.add(new NamedStreamable.FileWrapper(base.toFile()));
         MerkleNode node = add.get(add.size() - 1);
         Assert.assertEquals(EXPECTED, node.hash.toBase58());
     }

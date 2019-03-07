@@ -1,4 +1,4 @@
-package io.ipfs.api.cbor;
+package io.udfs.api.cbor;
 
 /*
  * JACOB - CBOR implementation in Java.
@@ -10,7 +10,7 @@ package io.ipfs.api.cbor;
 
 import java.io.*;
 
-import static io.ipfs.api.cbor.CborConstants.*;
+import static io.udfs.api.cbor.CborConstants.*;
 
 /**
  * Provides an encoder capable of encoding data into CBOR format to a given {@link OutputStream}.

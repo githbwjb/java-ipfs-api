@@ -1,7 +1,6 @@
-package io.ipfs.api.cbor;
+package io.udfs.api.cbor;
 
 import io.ipfs.cid.*;
-import io.ipfs.multiaddr.*;
 import io.ipfs.multihash.*;
 
 import java.io.*;

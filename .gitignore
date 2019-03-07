@@ -7,7 +7,7 @@
 dist/*
 target/
 dependency-reduced-pom.xml
-TEST-io.ipfs.api.APITest.*
+TEST-APITest.*
 
 # Scala-IDE specific
 .idea/*

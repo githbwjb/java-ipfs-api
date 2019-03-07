@@ -1,8 +1,10 @@
-package io.ipfs.api;
+package io.udfs.api;
 
-import io.ipfs.api.cbor.*;
+import io.udfs.api.cbor.*;
 import io.ipfs.cid.*;
 import io.ipfs.multihash.*;
+import io.udfs.api.cbor.CborObject;
+import io.udfs.api.cbor.Cborable;
 
 import java.security.*;
 import java.util.*;

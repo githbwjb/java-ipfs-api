@@ -1,4 +1,4 @@
-package io.ipfs.api;
+package io.udfs.api;
 
 import java.io.*;
 import java.net.*;
@@ -25,7 +25,7 @@ public class Multipart {
             httpConn.setDoInput(true);
             httpConn.setRequestProperty("Expect", "100-continue");
             httpConn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
-            httpConn.setRequestProperty("User-Agent", "Java IPFS CLient");
+            httpConn.setRequestProperty("User-Agent", "Java UDFS CLient");
             out = httpConn.getOutputStream();
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);

@@ -1,4 +1,4 @@
-package io.ipfs.api.cbor;
+package io.udfs.api.cbor;
 
 public interface Cborable {
 

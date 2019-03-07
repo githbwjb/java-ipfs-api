@@ -1,4 +1,4 @@
-package io.ipfs.api;
+package io.udfs.api;
 
 import io.ipfs.cid.*;
 import io.ipfs.multihash.Multihash;
@@ -12,7 +12,7 @@ import java.util.concurrent.*;
 import java.util.function.*;
 import java.util.stream.*;
 
-public class IPFS {
+public class UDFS {
 
     public static final Version MIN_VERSION = Version.parse("0.4.11");
     public enum PinType {all, direct, indirect, recursive}
@@ -41,19 +41,19 @@ public class IPFS {
     public final Name name = new Name();
     public final Pubsub pubsub = new Pubsub();
 
-    public IPFS(String host, int port) {
-        this(host, port, "/api/v0/", false);
+    public UDFS(String host, int port, boolean ssl) {
+        this(host, port, "/api/v0/", ssl);
     }
 
-    public IPFS(String multiaddr) {
+    public UDFS(String multiaddr) {
         this(new MultiAddress(multiaddr));
     }
 
-    public IPFS(MultiAddress addr) {
+    public UDFS(MultiAddress addr) {
         this(addr.getHost(), addr.getTCPPort(), "/api/v0/", detectSSL(addr));
     }
 
-    public IPFS(String host, int port, String version, boolean ssl) {
+    public UDFS(String host, int port, String version, boolean ssl) {
         this.host = host;
         this.port = port;
 
@@ -64,11 +64,11 @@ public class IPFS {
         }
 
         this.version = version;
-        // Check IPFS is sufficiently recent
+        // Check UDFS is sufficiently recent
         try {
             Version detected = Version.parse(version());
             if (detected.isBefore(MIN_VERSION))
-                throw new IllegalStateException("You need to use a more recent version of IPFS! >= " + MIN_VERSION);
+                throw new IllegalStateException("You need to use a more recent version of UDFS! >= " + MIN_VERSION);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -88,6 +88,49 @@ public class IPFS {
 
     public List<MerkleNode> add(List<NamedStreamable> files, boolean wrap, boolean hashOnly) throws IOException {
         Multipart m = new Multipart(protocol + "://" + host + ":" + port + version + "add?stream-channels=true&w="+wrap + "&n="+hashOnly, "UTF-8");
+        for (NamedStreamable file: files) {
+            if (file.isDirectory()) {
+                m.addSubtree(Paths.get(""), file);
+            } else
+                m.addFilePart("file", Paths.get(""), file);
+        };
+        String res = m.finish();
+        return JSONParser.parseStream(res).stream()
+                .map(x -> MerkleNode.fromJSON((Map<String, Object>) x))
+                .collect(Collectors.toList());
+    }
+
+    public List<MerkleNode> push(NamedStreamable file) throws IOException {
+        return push(file, false);
+    }
+
+    /**
+     * 文件主动备份
+     * @param file
+     * @param wrap
+     * @return
+     * @throws IOException
+     * @author allen
+     */
+    public List<MerkleNode> push(NamedStreamable file, boolean wrap) throws IOException {
+        return push(file, wrap, false);
+    }
+
+    public List<MerkleNode> push(NamedStreamable file, boolean wrap, boolean hashOnly) throws IOException {
+        return push(Collections.singletonList(file), wrap, hashOnly);
+    }
+
+    /**
+     * 添加主动备份的方法
+     * @param files
+     * @param wrap
+     * @param hashOnly
+     * @return
+     * @throws IOException
+     * @author allen
+     */
+    public List<MerkleNode> push(List<NamedStreamable> files, boolean wrap, boolean hashOnly) throws IOException {
+        Multipart m = new Multipart(protocol + "://" + host + ":" + port + version + "push?stream-channels=true&w="+wrap + "&n="+hashOnly, "UTF-8");
         for (NamedStreamable file: files) {
             if (file.isDirectory()) {
                 m.addSubtree(Paths.get(""), file);
@@ -287,7 +330,7 @@ public class IPFS {
         }
 
         public List<MerkleNode> put(List<byte[]> data, Optional<String> format) throws IOException {
-            // N.B. Once IPFS implements a bulk put this can become a single multipart call with multiple 'files'
+            // N.B. Once UDFS implements a bulk put this can become a single multipart call with multiple 'files'
             List<MerkleNode> res = new ArrayList<>();
             for (byte[] value : data) {
                 res.add(put(value, format));
@@ -652,7 +695,7 @@ public class IPFS {
 
     private byte[] retrieve(String path) throws IOException {
         URL target = new URL(protocol, host, port, version + path);
-        return IPFS.get(target);
+        return UDFS.get(target);
     }
 
     private static byte[] get(URL target) throws IOException {
@@ -670,10 +713,10 @@ public class IPFS {
                 resp.write(buf, 0, r);
             return resp.toByteArray();
         } catch (ConnectException e) {
-            throw new RuntimeException("Couldn't connect to IPFS daemon at "+target+"\n Is IPFS running?");
+            throw new RuntimeException("Couldn't connect to UDFS daemon at "+target+"\n Is UDFS running?");
         } catch (IOException e) {
             String err = new String(readFully(conn.getErrorStream()));
-            throw new RuntimeException("IOException contacting IPFS daemon.\nTrailer: " + conn.getHeaderFields().get("Trailer") + " " + err, e);
+            throw new RuntimeException("IOException contacting UDFS daemon.\nTrailer: " + conn.getHeaderFields().get("Trailer") + " " + err, e);
         }
     }
 
@@ -699,7 +742,7 @@ public class IPFS {
 
     private InputStream retrieveStream(String path) throws IOException {
         URL target = new URL("http", host, port, version + path);
-        return IPFS.getStream(target);
+        return UDFS.getStream(target);
     }
 
     private static InputStream getStream(URL target) throws IOException {

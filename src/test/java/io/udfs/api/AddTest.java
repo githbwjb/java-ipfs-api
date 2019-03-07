@@ -1,4 +1,4 @@
-package io.ipfs.api;
+package io.udfs.api;
 
 import io.ipfs.multibase.*;
 import org.junit.*;
@@ -16,7 +16,7 @@ public class AddTest {
 //        httpConn.setUseCaches(false);
         httpConn.setDoOutput(true);
         httpConn.setDoInput(true);
-        httpConn.setRequestProperty("User-Agent", "Java IPFS Client");
+        httpConn.setRequestProperty("User-Agent", "Java UDFS Client");
         httpConn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
         httpConn.getOutputStream().write(multipartBody);
         httpConn.getOutputStream().flush();
@@ -34,7 +34,7 @@ public class AddTest {
             httpConn.disconnect();
         }
         if (b.toString().contains("rror"))
-             throw new IllegalStateException("Error returned from IPFS: " + b.toString());
+             throw new IllegalStateException("Error returned from UDFS: " + b.toString());
         System.out.println(b.toString());
     }
 
